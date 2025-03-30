@@ -1,0 +1,22 @@
+[ 2025-03-08 15:54:53,632 ] 97 werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.104:5000
+[ 2025-03-08 15:54:53,632 ] 97 werkzeug - INFO - [33mPress CTRL+C to quit[0m
+[ 2025-03-08 15:56:21,621 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:56:21] "GET / HTTP/1.1" 200 -
+[ 2025-03-08 15:56:21,751 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:56:21] "GET /static/css/styles.css HTTP/1.1" 200 -
+[ 2025-03-08 15:56:21,789 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:56:21] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[ 2025-03-08 15:56:26,396 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:56:26] "GET /predictdata HTTP/1.1" 200 -
+[ 2025-03-08 15:56:26,462 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:56:26] "GET /static/css/styles_home.css HTTP/1.1" 200 -
+[ 2025-03-08 15:57:18,569 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:57:18] "POST /predictdata HTTP/1.1" 200 -
+[ 2025-03-08 15:57:18,604 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:57:18] "[36mGET /static/css/styles_home.css HTTP/1.1[0m" 304 -
+[ 2025-03-08 15:57:25,493 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:57:25] "GET / HTTP/1.1" 200 -
+[ 2025-03-08 15:57:25,532 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 15:57:25] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+[ 2025-03-08 16:05:05,352 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 16:05:05] "GET / HTTP/1.1" 200 -
+[ 2025-03-08 16:05:05,498 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 16:05:05] "GET /static/css/styles.css HTTP/1.1" 200 -
+[ 2025-03-08 16:05:05,607 ] 97 werkzeug - INFO - 127.0.0.1 - - [08/Mar/2025 16:05:05] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[ 2025-03-08 16:05:24,103 ] 97 werkzeug - INFO - 192.168.0.104 - - [08/Mar/2025 16:05:24] "GET / HTTP/1.1" 200 -
+[ 2025-03-08 16:05:24,209 ] 97 werkzeug - INFO - 192.168.0.104 - - [08/Mar/2025 16:05:24] "GET /static/css/styles.css HTTP/1.1" 200 -
+[ 2025-03-08 16:05:24,234 ] 97 werkzeug - INFO - 192.168.0.104 - - [08/Mar/2025 16:05:24] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[ 2025-03-08 16:05:27,204 ] 97 werkzeug - INFO - 192.168.0.104 - - [08/Mar/2025 16:05:27] "GET /predictdata HTTP/1.1" 200 -
+[ 2025-03-08 16:05:27,212 ] 97 werkzeug - INFO - 192.168.0.104 - - [08/Mar/2025 16:05:27] "GET /static/css/styles_home.css HTTP/1.1" 200 -

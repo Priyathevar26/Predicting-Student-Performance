@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Student Performance Prediction</h1>
+    </header>
+
+    <section class="mission">
+        <div class="mission-card">
+            <h2>Mission One</h2>
+            <p>To predict the student's result based on their previous performance and other details.</p>
+        </div>
+        <div class="mission-card">
+            <h2>Mission Two</h2>
+            <p>To train students based on predictions to improve their academic performance.</p>
+        </div>
+        <div class="mission-card">
+            <h2>Mission Three</h2>
+            <p>To improve the university's ranking and reputation.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-section">
+            <h3>ABOUT US</h3>
+            <p>A web application developed by engineering students to predict student performance in exams by analyzing various features.</p>
+        </div>
+    
+        <div class="footer-section">
+            <h3>QUICK LINKS</h3>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+    
+        <div class="footer-section">
+            <h3>OUR MISSION</h3>
+            <a href="{{ url_for('predict') }}">Predict</a>
+        </div>
+    
+        <div class="footer-section">
+            <h3>CONTACT US</h3>
+            <p>📍 20, ABC Street, Mumbai</p>
+            <p>📞 1234567890</p>
+            <p>📧 elevate@abc.com</p>
+    
+            <!-- Social Icons Inside Contact Section -->
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-google"></i></a>
+            </div>
+        </div>
+    
+        <div class="copyright">
+            <p>Copyright © Elevate College 2025. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    
+    

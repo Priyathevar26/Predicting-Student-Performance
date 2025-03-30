@@ -1,0 +1,179 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Correct relative path to the image */
+    background: url('static/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+
+/* Header Styles */
+header {
+    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent header */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+}
+
+/* Mission Section */
+.mission {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+.mission-card {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    color: white;
+    padding: 20px;
+    width: 30%;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Footer Styles */
+footer {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+/* Footer Section */
+.footer-section {
+    width: 20%;
+}
+
+.footer-section h3 {
+    border-bottom: 2px solid orange;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.footer-section a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.social-icons a:hover {
+    color: orange;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* Fullscreen Centered Login Page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Test with the full local path */
+    background: url('file:///C:/Users/Priyadharshini/Downloads/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.login-form {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.login-form h2 {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.login-form p {
+    color: #ddd;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Properly Styled Input Fields */
+.input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bbb;
+    font-size: 18px;
+}
+
+.input-group input {
+    width: 100%; /* Ensure it fits the form */
+    padding: 12px 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box; /* Prevent overflow */
+}
+
+/* Button Styling */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: orange;
+    color: white;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: darkorange;
+}
+
+/* Forgot Password & Create Account Links */
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.login-options a {
+    color: orange;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-options a:hover {
+    text-decoration: underline;
+}
