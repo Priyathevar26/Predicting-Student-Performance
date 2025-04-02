@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Data Preview: {{ filename }}</h2>
+    
+    <div class="alert alert-info">
+        Showing first 100 rows | {{ columns|length }} columns
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <button id="trainBtn" class="btn btn-success">
+                    <i class="fas fa-cogs"></i> Train Performance Model
+                </button>
+            </div>
+            <div id="trainingStatus"></div>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            {% for col in columns %}
+                                <th>{{ col|title|replace('_', ' ') }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            {% for col in columns %}
+                                <td>
+                                    {% if student[col] is none or student[col] == 'nan' %}
+                                        <span class="text-muted">N/A</span>
+                                    {% else %}
+                                        {{ student[col] }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('trainBtn').addEventListener('click', function() {
+    const btn = this;
+    const statusDiv = document.getElementById('trainingStatus');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Training...';
+    statusDiv.innerHTML = '<span class="text-info">Training model with current data...</span>';
+    
+    fetch('/train_model', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Format feature importance
+            const features = Object.entries(data.feature_importance)
+                .map(([feat, imp]) => `${feat.replace('_', ' ')}: ${(imp*100).toFixed(1)}%`)
+                .join(', ');
+            
+            statusDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>Training Complete!</strong><br>
+                    R² Score: ${data.r2_score.toFixed(3)}<br>
+                    Features: ${features}<br>
+                    Samples: ${data.sample_size}
+                </div>
+            `;
+        } else {
+            statusDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> ${data.error || 'Training failed'}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        statusDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <strong>Error:</strong> ${error}
+            </div>
+        `;
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cogs"></i> Train Performance Model';
+    });
+});
+</script>
+
+<style>
+.table td, .table th {
+    white-space: nowrap;
+    padding: 8px 12px;
+}
+</style>
+{% endblock %}

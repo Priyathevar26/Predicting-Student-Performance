@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Upload Student Data</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select CSV or Excel file:</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file" name="file" required>
+                        <label class="custom-file-label" for="file">Choose file...</label>
+                    </div>
+                    <small class="form-text text-muted">
+                        Supported formats: .csv, .xlsx
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update file input label
+document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+    var fileName = e.target.files[0].name;
+    var nextSibling = e.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+});
+</script>
+{% endblock %}

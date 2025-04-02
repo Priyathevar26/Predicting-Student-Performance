@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predict Student Performance</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Predict Performance</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <h1>Student Performance Prediction</h1>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/predict">Predict</a></li>
-            </ul>
-        </nav>
-    </header>
+    <h2>Predict Student Performance</h2>
+    <form id="predictForm">
+        <label>Math Score:</label>
+        <input type="number" id="math" required><br>
+        <label>Reading Score:</label>
+        <input type="number" id="reading" required><br>
+        <label>Writing Score:</label>
+        <input type="number" id="writing" required><br>
+        <button type="submit">Predict</button>
+    </form>
 
-    <section class="prediction-form">
-        <h2>Enter Student Details</h2>
-        <form method="POST">
-            <input type="text" name="gender" placeholder="Gender">
-            <input type="text" name="ethnicity" placeholder="Race/Ethnicity">
-            <input type="text" name="parental_level_of_education" placeholder="Parental Education">
-            <input type="text" name="lunch" placeholder="Lunch Type">
-            <input type="text" name="test_preparation_course" placeholder="Test Preparation Course">
-            <input type="number" name="reading_score" placeholder="Reading Score">
-            <input type="number" name="writing_score" placeholder="Writing Score">
-            <button type="submit">Predict</button>
-        </form>
+    <h3 id="result"></h3>
 
-        {% if result %}
-            <h3>Predicted Math Score: {{ result }}</h3>
-        {% endif %}
-    </section>
+    <script>
+        document.getElementById("predictForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let math = document.getElementById("math").value;
+            let reading = document.getElementById("reading").value;
+            let writing = document.getElementById("writing").value;
+
+            fetch('/predict', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ "Math Score": math, "Reading Score": reading, "Writing Score": writing })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = "Predicted Total Score: " + data.predicted_score;
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
 </body>
 </html>
