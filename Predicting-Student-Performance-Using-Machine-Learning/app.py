@@ -1,3 +1,4 @@
+# app.py
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +11,7 @@ from werkzeug.utils import secure_filename
 import uuid
 from datetime import datetime
 from pathlib import Path
+from io import StringIO
 
 app = Flask(__name__)
 
@@ -104,7 +106,7 @@ def login():
         if user and check_password_hash(user.password, password):
             session["user_id"] = user.id
             flash("✅ Login Successful!", "success")
-            return redirect(url_for("upload_file"))
+            return redirect(url_for("dashboard"))
         else:
             flash("❌ Invalid Username or Password!", "danger")
 
@@ -124,13 +126,78 @@ def logout():
     flash("✅ You have been logged out.", "info")
     return redirect(url_for("login"))
 
-@app.route("/predict")
+@app.route("/predict", methods=["GET", "POST"])
 def predict():
-    return render_template("predict.html")
+    if "user_id" not in session:
+        flash("Please login first", "warning")
+        return redirect(url_for("login"))
 
-@app.route("/predict_datapoint")
-def predict_datapoint():
-    return redirect(url_for('predict'))
+    if request.method == "POST":
+        try:
+            # Convert inputs safely
+            def to_float(x, default=0.0):
+                try: return float(x) if x not in [None, "", "None"] else default
+                except: return default
+
+            student_data = {
+                "name": request.form.get("name", "Student"),
+                "attendance_percent": to_float(request.form.get("attendance_percent")),
+                "midterm_score": to_float(request.form.get("midterm_score")),
+                "private_class": 1 if request.form.get("private_class") == "YES" else 0,
+                "physical_fitness": 1 if request.form.get("physical_fitness") == "YES" else 0,
+                "mental_fitness": 1 if request.form.get("mental_fitness") == "YES" else 0,
+                "subject1_duration": to_float(request.form.get("subject1_duration")),
+                "subject2_duration": to_float(request.form.get("subject2_duration")),
+                "test_preparation_course": 1 if request.form.get("test_preparation_course") == "completed" else 0,
+                "participation_score": to_float(request.form.get("participation_score"))
+            }
+            
+            # Load model
+            model_path = os.path.join(app.config['UPLOAD_FOLDER'], f"model_{session.get('current_file_id')}.pkl")
+            model_data = joblib.load(model_path)
+            model = model_data['model']
+            
+            # Prepare features in EXACT order used during training
+            features = [
+                student_data['attendance_percent'],
+                student_data['midterm_score'],
+                student_data['private_class'],
+                student_data['physical_fitness'],
+                student_data['mental_fitness'],
+                student_data['subject1_duration'],
+                student_data['subject2_duration'],
+                student_data['test_preparation_course'],
+                student_data['participation_score']
+            ]
+            
+            # Validate feature count
+            if len(features) != 9:
+                raise ValueError(f"Expected 9 features, got {len(features)}")
+            
+            prediction = model.predict([features])[0]
+            
+            # Performance evaluation
+            if prediction >= 80:
+                performance = "Excellent"
+                feedback = "Your performance is excellent! Keep up the good work."
+            elif prediction >= 60:
+                performance = "Good"
+                feedback = "According to our analysis, your performance is good. You just need to practise enough to remain in touch with the subjects and not lose your hold. Keep it up."
+            else:
+                performance = "Needs Improvement"
+                feedback = "Your performance needs improvement. Consider spending more time studying and seek help from teachers if needed."
+            
+            return render_template("prediction_results.html",
+                                 student_data=student_data,
+                                 score=round(prediction, 2),
+                                 performance=performance,
+                                 feedback=feedback)
+        
+        except Exception as e:
+            flash(f"Error during prediction: {str(e)}", "danger")
+            return redirect(url_for("predict"))
+    
+    return render_template("detailed_predict.html")
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -190,12 +257,12 @@ def preview():
         return redirect(url_for('upload_file'))
     
     try:
-        data_file = DataFile.query.get(session['current_file_id'])
+        data_file = db.session.get(DataFile, session['current_file_id'])
         if not data_file:
             flash('File not found', 'danger')
             return redirect(url_for('upload_file'))
         
-        df = pd.read_json(data_file.data)
+        df = pd.read_json(StringIO(data_file.data))
         columns = [col for col in df.columns if col != 'email']
         
         return render_template('preview.html', 
@@ -206,34 +273,40 @@ def preview():
     except Exception as e:
         flash(f'Error loading data: {str(e)}', 'danger')
         return redirect(url_for('upload_file'))
-
 @app.route('/train_model', methods=['POST'])
 def train_model():
-    if 'user_id' not in session:
-        return jsonify({'error': 'Please login first'}), 401
-    
-    if 'current_file_id' not in session:
-        return jsonify({'error': 'No data available for training'}), 400
-    
     try:
-        data_file = DataFile.query.get(session['current_file_id'])
-        df = pd.read_json(data_file.data)
+        data_file = db.session.get(DataFile, session['current_file_id'])
+        df = pd.read_json(StringIO(data_file.data))
         df = clean_data(df)
         
-        # Data cleaning
-        df = df.dropna(subset=['final_score'])  # Drop rows missing target
+        # Define your features list explicitly
+        features = [
+            'attendance_percent',
+            'midterm_score',
+            'private_class',
+            'physical_fitness',
+            'mental_fitness',
+            'subject1_duration',
+            'subject2_duration',
+            'test_preparation_course',
+            'participation_score'
+        ]
         
-        # Feature selection
-        features = ['attendance_percent', 'midterm_score', 
-                   'assignments_avg', 'quizzes_avg', 'participation_score']
+        # Filter for only available features
+        available_features = [f for f in features if f in df.columns]
         
-        # Handle missing values in features
-        for col in features:
-            if col in df.columns:
-                df[col] = df[col].fillna(df[col].median())
+        if not available_features:
+            return jsonify({'error': 'No valid features found in dataset'}), 400
+            
+        # Handle missing values
+        for col in available_features:
+            df[col] = df[col].fillna(df[col].median())
         
-        X = df[features]
+        X = df[available_features]
         y = df['final_score']
+        
+        # Rest of your training code...
         
         # Train/test split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -254,7 +327,8 @@ def train_model():
             'message': 'Model trained successfully!',
             'r2_score': model.score(X_test, y_test),
             'feature_importance': importance,
-            'sample_size': len(df)
+            'sample_size': len(df),
+            'redirect': url_for('predict')
         })
         
     except Exception as e:
