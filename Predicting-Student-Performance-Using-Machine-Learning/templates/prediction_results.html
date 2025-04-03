@@ -2,87 +2,51 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card text-center">
-        <div class="card-header bg-success text-white">
+    <div class="card">
+        <div class="card-header">
             <h2>Student Performance Prediction</h2>
         </div>
         <div class="card-body">
-            <h3 class="text-success">Congratulations!</h3>
-            
-            <div class="result-box p-4 my-4" style="background-color: #f8f9fa; border-radius: 10px;">
-                <p class="lead">{{ feedback }}</p>
-                <div class="performance-score mt-3">
-                    <h4>Your Score: <span class="badge badge-primary">{{ "%.1f"|format(score) }}/100</span></h4>
+            <form method="POST" action="{{ url_for('predict') }}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Student Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="midterm_score">Midterm Score (0-100)</label>
+                            <input type="number" class="form-control" id="midterm_score" name="midterm_score" 
+                                   min="0" max="100" required>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="attendance">Attendance Percentage (0-100)</label>
+                            <input type="number" class="form-control" id="attendance" name="attendance" 
+                                   min="0" max="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="test_prep">Test Preparation Course</label>
+                            <select class="form-control" id="test_prep" name="test_prep" required>
+                                <option value="">Select</option>
+                                <option value="completed">Completed</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="action-buttons mt-4">
-                <a href="{{ url_for('predict') }}" class="btn btn-primary">
-                    <i class="fas fa-redo"></i> Make Another Prediction
-                </a>
-                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
-                    <i class="fas fa-home"></i> Return to Dashboard
-                </a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- About Us Section -->
-    <div class="row mt-5">
-        <div class="col-md-3">
-            <div class="footer-section">
-                <h5>ABOUT US</h5>
-                <p>A web application developed by ______</p>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="footer-section">
-                <h5>QUICK LINKS</h5>
-                <ul class="list-unstyled">
-                    <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('predict') }}">Predict</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="footer-section">
-                <h5>OUR MISSION</h5>
-                <p>To help students improve their academic performance through predictive analysis</p>
-            </div>
-        </div>
-        
-        <div class="col-md-3">
-            <div class="footer-section">
-                <h5>CONTACT US</h5>
-                <address>
-                    20 ABC Street<br>
-                    Pondicherry<br>
-                    example@domain.com
-                </address>
-            </div>
+                
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-calculator"></i> Predict Performance
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-<style>
-.card-header {
-    font-size: 1.5rem;
-}
-.result-box {
-    border-left: 5px solid #28a745;
-}
-.footer-section {
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 5px;
-    height: 100%;
-}
-.footer-section h5 {
-    color: #28a745;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 10px;
-}
-</style>
 {% endblock %}

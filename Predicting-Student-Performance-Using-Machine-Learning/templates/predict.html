@@ -11,13 +11,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Student Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <label for="student_name">Student Name</label>
+                            <input type="text" class="form-control" id="student_name" name="student_name" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="midterm_score">Midterm Score (0-100)</label>
                             <input type="number" class="form-control" id="midterm_score" name="midterm_score" 
+                                   min="0" max="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assignments_avg">Assignments Average (0-100)</label>
+                            <input type="number" class="form-control" id="assignments_avg" name="assignments_avg" 
                                    min="0" max="100" required>
                         </div>
                     </div>
@@ -30,11 +36,11 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="test_prep">Test Preparation Course</label>
-                            <select class="form-control" id="test_prep" name="test_prep" required>
+                            <label for="prep_course">Test Preparation Course</label>
+                            <select class="form-control" id="prep_course" name="test_prep" required>
                                 <option value="">Select</option>
-                                <option value="completed">Completed</option>
-                                <option value="none">None</option>
+                                <option value="Completed">Completed</option>
+                                <option value="None">None</option>
                             </select>
                         </div>
                     </div>

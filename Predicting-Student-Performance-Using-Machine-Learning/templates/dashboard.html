@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        <p>Here, you can manage your uploads, view predictions, and access other features.</p>
+
+        <ul>
+            <li><a href="{{ url_for('upload_file') }}">Upload Data</a></li>
+
+            <li><a href="{{ url_for('predict') }}">Make a Prediction</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+{% endblock %}
