@@ -156,24 +156,16 @@ def predict():
             model_path = os.path.join(app.config['UPLOAD_FOLDER'], f"model_{session.get('current_file_id')}.pkl")
             model_data = joblib.load(model_path)
             model = model_data['model']
-            
-            # Prepare features in EXACT order used during training
-            features = [
-                student_data['attendance_percent'],
-                student_data['midterm_score'],
-                student_data['private_class'],
-                student_data['physical_fitness'],
-                student_data['mental_fitness'],
-                student_data['subject1_duration'],
-                student_data['subject2_duration'],
-                student_data['test_preparation_course'],
-                student_data['participation_score']
-            ]
-            
+            trained_features = model_data['features']
+
+            # Prepare features in the exact order used during training
+            features = [student_data[feature] for feature in trained_features]
+
             # Validate feature count
-            if len(features) != 9:
-                raise ValueError(f"Expected 9 features, got {len(features)}")
+            if len(features) != len(trained_features):
+                raise ValueError(f"Expected {len(trained_features)} features, got {len(features)}")
             
+            # Make prediction
             prediction = model.predict([features])[0]
             
             # Performance evaluation
@@ -182,11 +174,12 @@ def predict():
                 feedback = "Your performance is excellent! Keep up the good work."
             elif prediction >= 60:
                 performance = "Good"
-                feedback = "According to our analysis, your performance is good. You just need to practise enough to remain in touch with the subjects and not lose your hold. Keep it up."
+                feedback = "Your performance is good. Keep practising!"
             else:
                 performance = "Needs Improvement"
-                feedback = "Your performance needs improvement. Consider spending more time studying and seek help from teachers if needed."
-            
+                feedback = "Your performance needs improvement. Consider seeking help if necessary."
+
+            # Render result template
             return render_template("prediction_results.html",
                                  student_data=student_data,
                                  score=round(prediction, 2),
@@ -195,9 +188,9 @@ def predict():
         
         except Exception as e:
             flash(f"Error during prediction: {str(e)}", "danger")
-            return redirect(url_for("predict"))
+            return redirect(url_for("predict"))  # ✅ fixed this line
     
-    return render_template("detailed_predict.html")
+    return render_template("predict.html")
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
@@ -306,8 +299,6 @@ def train_model():
         X = df[available_features]
         y = df['final_score']
         
-        # Rest of your training code...
-        
         # Train/test split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         
@@ -317,10 +308,15 @@ def train_model():
         
         # Save model
         model_path = os.path.join(app.config['UPLOAD_FOLDER'], f"model_{data_file.id}.pkl")
-        joblib.dump(model, model_path)
+        joblib.dump({'model': model, 'features': available_features}, model_path)
         
-        # Feature importance
-        importance = dict(zip(features, model.feature_importances_))
+        # Load the model and features
+        model_data = joblib.load(model_path)
+        model = model_data['model']
+        trained_features = model_data['features']
+
+        # Feature importance calculation
+        importance = dict(zip(trained_features, model.feature_importances_))
         
         return jsonify({
             'success': True,

@@ -1,52 +1,88 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Performance Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Enter Student Details for Prediction</h2>
 
-{% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h2>Student Performance Prediction</h2>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="{{ url_for('predict') }}">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="name">Student Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="midterm_score">Midterm Score (0-100)</label>
-                            <input type="number" class="form-control" id="midterm_score" name="midterm_score" 
-                                   min="0" max="100" required>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="attendance">Attendance Percentage (0-100)</label>
-                            <input type="number" class="form-control" id="attendance" name="attendance" 
-                                   min="0" max="100" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="test_prep">Test Preparation Course</label>
-                            <select class="form-control" id="test_prep" name="test_prep" required>
-                                <option value="">Select</option>
-                                <option value="completed">Completed</option>
-                                <option value="none">None</option>
-                            </select>
-                        </div>
-                    </div>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }}">
+                    {{ messages[0][1] }}
                 </div>
-                
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary btn-block">
-                        <i class="fas fa-calculator"></i> Predict Performance
-                    </button>
-                </div>
-            </form>
-        </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('predict') }}" method="POST">
+            <div class="form-group">
+                <label for="name">Student Name</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="attendance_percent">Attendance Percentage</label>
+                <input type="number" class="form-control" name="attendance_percent" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="midterm_score">Midterm Score</label>
+                <input type="number" class="form-control" name="midterm_score" required>
+            </div>
+
+            <div class="form-group">
+                <label for="private_class">Private Class</label>
+                <select class="form-control" name="private_class">
+                    <option value="YES">Yes</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="physical_fitness">Physical Fitness</label>
+                <select class="form-control" name="physical_fitness">
+                    <option value="YES">Yes</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mental_fitness">Mental Fitness</label>
+                <select class="form-control" name="mental_fitness">
+                    <option value="YES">Yes</option>
+                    <option value="NO">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="subject1_duration">Subject 1 Study Duration (hours)</label>
+                <input type="number" class="form-control" name="subject1_duration" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="subject2_duration">Subject 2 Study Duration (hours)</label>
+                <input type="number" class="form-control" name="subject2_duration" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="test_preparation_course">Test Preparation Course</label>
+                <select class="form-control" name="test_preparation_course">
+                    <option value="completed">Completed</option>
+                    <option value="not_completed">Not Completed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="participation_score">Participation Score</label>
+                <input type="number" class="form-control" name="participation_score" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Predict Performance</button>
+        </form>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>
